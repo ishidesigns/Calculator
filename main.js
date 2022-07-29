@@ -11,24 +11,7 @@ function getOutput() {
 }
 
 function printOutput(num) {
-  if (num == "") {
-    document.getElementById("screen").innerText = num;
-  } else {
-    document.getElementById("screen").innerText = getFormattedNumber(num);
-  }
-}
-
-function getFormattedNumber(num) {
-  if (num == "-") {
-    return "";
-  }
-  var n = Number(num);
-  var value = n.toLocaleString("en");
-  return value;
-}
-
-function reverseNumberFormat(num) {
-  return Number(num.replace(/,/g, ""));
+  document.getElementById("screen").innerText = num;
 }
 
 var operator = document.getElementsByClassName("op");
@@ -38,13 +21,13 @@ for (var i = 0; i < operator.length; i++) {
       printHistory("");
       printOutput("");
     } else if (this.id == "backspace") {
-      var output = reverseNumberFormat(getOutput()).toString();
+      var output = getOutput();
       if (output) {
         output = output.slice(0, -1);
         printOutput(output);
       }
     } else if (this.id === "sq") {
-      var output = reverseNumberFormat(getOutput());
+      var output = getOutput();
       if (output) {
         var ans = output * output;
         printOutput(ans);
@@ -58,7 +41,6 @@ for (var i = 0; i < operator.length; i++) {
         }
       }
       if (output != "" || history != "") {
-        output = output == "" ? output : reverseNumberFormat(output);
         history = history + output;
         if (this.id == "=") {
           var result = eval(history);
@@ -74,15 +56,24 @@ for (var i = 0; i < operator.length; i++) {
   });
 }
 
-let haveDot = false;
 var number = document.getElementsByClassName("num");
 for (var i = 0; i < number.length; i++) {
   number[i].addEventListener("click", function () {
-    var output = reverseNumberFormat(getOutput());
+    var output = getOutput();
     if (output != NaN) {
-      //if output is a number
       output = output + this.id;
       printOutput(output);
     }
   });
 }
+
+var dot = document.getElementById("dot");
+dot.addEventListener("click", () => {
+  var output = getOutput();
+  var ch = dot.innerText;
+  if (output.includes(ch)) return;
+  else {
+    output = output + ch;
+    printOutput(output);
+  }
+});
